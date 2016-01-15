@@ -2,50 +2,30 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 
 app = Flask(__name__)
 
+#models
+from models import Registry
+
+#controllers
+from .controllers import Read
+
+#DB
 from contextlib import closing
-from app.config import DevelopmentConfig
-from app.database import db_session
+from .config import DevelopmentConfig
+from .database import db_session
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
-
-
-from app.database import init_db
+from .database import init_db
 init_db()
 
+#REST
+from flask_restful import Resource, Api
+api = Api(app)
 
-from models import Registry
+api.add_resource(Read, '/read')
 
-'''
-import logging
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
-'''
 
-@app.route('/')
-def base():
-	return 'This page is empty'
 
-@app.route('/readall')
-def readAll():
-	print Registry.query.all()
-
-@app.route('/insertEntry')
-def insertEntry():
-	try:
-		entry = Registry(
-			token = 'bbbb',
-			endpoint = 'ccccc',
-			phoneNumber = 1981932,
-			channel = 'bbbb',
-			pid = 0
-		)
-		db_session.add(entry)
-		print "qua"
-		db_session.commit()
-		return entry.id
-	except Exception as e:
-		print e
 
 if __name__ == '__main__':
 	app.run()

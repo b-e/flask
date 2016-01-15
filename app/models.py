@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from app.database import Base
+from .database import Base
 
 class Registry(Base):
 	__tablename__ = 'registry'
@@ -17,6 +17,3 @@ class Registry(Base):
 		self.phoneNumber = phoneNumber
 		self.channel = channel
 		self.pid = pid
-
-	def __repr__(self):
-		return 'phoneNumber {}'.format(self.phoneNumber)
